@@ -1,0 +1,15 @@
+node_modules
+bower_components
+/web
+/dist
+src/js/libs
+src/css/libs
+
+hybrid/platforms
+hybrid/www/*
+
+!hybrid/plugins
+hybrid/plugins/*
+!hybrid/plugins/fetch.json
+
+nbproject/private
