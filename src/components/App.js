@@ -25,8 +25,8 @@ class AsyncApp extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.selectedSubreddit !== prevProps.selectedSubreddit) {
-      const { dispatch, selectedSubreddit } = this.props
-      this.props.selectPost(selectedSubreddit)
+      const { selectPost, selectedSubreddit } = this.props
+      selectPost(selectedSubreddit)
     }
   }
 
@@ -39,15 +39,15 @@ class AsyncApp extends Component {
   handleRefreshClick(e) {
     e.preventDefault()
 
-    const { dispatch, selectedSubreddit } = this.props
-    dispatch(invalidateSubreddit(selectedSubreddit))
-    dispatch(fetchPostsIfNeeded(selectedSubreddit))
+    const {selectPost, selectedSubreddit } = this.props
+    invalidateSubreddit(selectedSubreddit)
+    selectPost(selectedSubreddit)
   }
 
   render() {
     const { selectedSubreddit, posts, isFetching, lastUpdated} = this.props
     return (
-      <div>
+      <div className="container">
         <Picker
           value={selectedSubreddit}
           onChange={this.handleChange}
@@ -68,7 +68,9 @@ class AsyncApp extends Component {
         {!isFetching && posts.length === 0 && <h2>Empty.</h2>}
         {posts.length > 0 &&
           <div style={{ opacity: isFetching ? 0.5 : 1 }}>
-            <Posts posts={posts} />
+            <div id="accordions">
+               <Posts theme="blue" toggleType="all" posts={posts} />
+            </div>
           </div>}
       </div>
     )
@@ -103,7 +105,8 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
   return {
     selectPost: (data) => dispatch(fetchPostsIfNeeded(data)),
-    chooseSubreddit: (data) => dispatch(selectSubreddit(data))
+    chooseSubreddit: (data) => dispatch(selectSubreddit(data)),
+    invalidateSubreddit: (data) => dispatch(invalidateSubreddit(data))
   }
 }
 

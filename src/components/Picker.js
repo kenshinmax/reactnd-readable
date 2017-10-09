@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import PostItem from './PostItem'
 
 export default class Picker extends Component {
   render() {
     const { value, onChange, options } = this.props
 
     return (
+      <div>
       <span>
         <h1>{value}</h1>
         <select onChange={e => onChange(e.target.value)} value={value}>
@@ -16,6 +18,8 @@ export default class Picker extends Component {
           ))}
         </select>
       </span>
+     
+      </div>
     )
   }
 }
