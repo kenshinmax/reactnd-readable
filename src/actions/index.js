@@ -68,13 +68,13 @@ function receivePosts(subreddit, json) {
 
 function createPost(category) {
   return dispatch => {
-    dispatch(addPost(title))
-    return fetch(`http://localhost:3001/posts/8xf0y6ziyjabvozdd253nd/comments`,
+    dispatch(addPost(category))
+    return fetch(`http://localhost:3001/posts/comments`,
       {
         headers: { 'Authorization': 'whatever-you-want' }
       })
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(subreddit, json)))
+      .then(json => dispatch(receivePosts(category, json)))
   }
 }
 function fetchComments(subreddit) {
