@@ -9,6 +9,7 @@ import {
 } from '../actions'
 import Picker from '../components/Picker'
 import Posts from '../components/Posts'
+import AddPost from '../components/AddPost'
 
 class AsyncApp extends Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class AsyncApp extends Component {
         <Picker
           value={selectedSubreddit}
           onChange={this.handleChange}
-          options={['reactjs', 'frontend', 'udacity']}
+          options={['react', 'frontend', 'redux']}
         />
         <p>
           {lastUpdated &&
@@ -64,6 +65,7 @@ class AsyncApp extends Component {
               Refresh
             </a>}
         </p>
+        <AddPost />
         {isFetching && posts.length === 0 && <h2>Loading...</h2>}
         {!isFetching && posts.length === 0 && <h2>Empty.</h2>}
         {posts.length > 0 &&

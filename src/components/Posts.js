@@ -7,11 +7,12 @@ export default class Posts extends Component {
   render() {
   	var classes = "accordion " + this.props.theme;
     return (
+     
      <div className={classes} role="tablist">
 
       
         {this.props.posts.map((post, i) => (
-
+          
         	<PostItem key={i} itemId={i} title={post.title} />
         	))
         }

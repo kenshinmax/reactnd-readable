@@ -5,10 +5,13 @@ import {
   REQUEST_POSTS,
   RECEIVE_POSTS, 
   REQUEST_COMMENTS,
-  RECEIVE_COMMENTS
+  RECEIVE_COMMENTS,
+  ADD_POST
 } from '../actions'
 
-function selectedSubreddit(state = 'reactjs', action) {
+
+
+function selectedSubreddit(state = 'react', action) {
   switch (action.type) {
     case SELECT_SUBREDDIT:
       return action.subreddit
@@ -71,6 +74,15 @@ function posts(
         items: action.posts,
         lastUpdated: action.receivedAt
       })
+      case ADD_POST:
+       return [
+          ...state,
+          {
+            id: action.id,
+            title: action.title,
+            deleted: action.deleted
+          }
+       ]
     default:
       return state
   }
