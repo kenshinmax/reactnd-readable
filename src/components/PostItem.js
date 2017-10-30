@@ -1,12 +1,27 @@
 import React, { Component } from 'react'
 import styles from './postitem.css';
+import Comments from './Comments'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import {
+  selectPost,
+  fetchCommentsIfNeeded
+} from '../actions'
 
-export default class PostItem extends Component {
+class PostItem extends Component {
 
    constructor(props) {
    	  super(props)
-   	  this.state={expanded: this.props.expanded, itemId: this.props.itemId, title: this.props.title}
+   	  this.state={
+   	  	expanded: this.props.expanded,
+   	  	itemId: this.props.itemId,
+   	  	post: this.props.item
+   	  }
    	  this.handleClick = this.handleClick.bind(this)
+   }
+   componentWillMount() {
+   	const { selectPost, getComments, item} = this.props
+   	getComments(item)
    }
    expand(){
    	  this.setState({ expanded:true })
@@ -17,8 +32,9 @@ export default class PostItem extends Component {
    toggleExpansion() {
    	  this.setState({ expanded: !this.state.expanded })
    }
-   handleClick() {
+   handleClick(post) {
    	  this.toggleExpansion()
+   	  
    }
    handleKeyPress(event) {
    	var key = event.keyCode;
@@ -45,18 +61,48 @@ export default class PostItem extends Component {
 				classes = "accordion-item " + expandState,
 				selectedState = this.state.expanded ? 'true' : 'false',
 				uniqueId = this.state.itemId,
-				title = this.state.title;
-   	  return (
+				title = this.state.post.title,
+				body = this.state.post.body
 
+				const { comments, item } = this.props
+                
+   	  return (
+            
 			<div id={uniqueId} className={classes}>
-					<header onClick={this.handleClick} onKeyDown={this.handleKeyPress} tabIndex="0" role="tab" aria-selected={selectedState} aria-controls={uniqueId} aria-expanded={ariaExpandedState}>
-						<span>{title}</span>
-					</header>
-					<section id={uniqueId} aria-hidden={ariaHiddenState} onKeyDown={this.handleKeyPress}>
-							<h2>Content</h2> 
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim inventore velit sint quod blanditiis, sapiente voluptatibus, molestiae, dolore ipsam labore quaerat veritatis fuga libero! Explicabo aperiam sapiente optio consectetur placeat.
-					</section>
+			    
+				<header value={item.id} onClick={this.handleClick} onKeyDown={this.handleKeyPress} tabIndex="0" role="tab" aria-selected={selectedState} aria-controls={uniqueId} aria-expanded={ariaExpandedState}>
+					<span>{title}</span>
+				</header>
+				<section id={uniqueId} aria-hidden={ariaHiddenState} onKeyDown={this.handleKeyPress}>
+						<p>{body}</p>
+						{ comments !== 'undefined' &&
+				          <div>
+				            <div id="comment-container">
+				               
+				            </div>
+				          </div>}
+				</section>
+				
 			</div>
    	  )
    }
 }
+
+
+function mapStateToProps(state) {
+  const { selectPost, commentsByPost } = state
+  const { items: comments } = commentsByPost || { items: [] }
+  return {
+    comments
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getComments: (data) => dispatch(fetchCommentsIfNeeded(data))
+  }
+} 
+
+
+export default connect(mapStateToProps,  mapDispatchToProps)(PostItem)
+

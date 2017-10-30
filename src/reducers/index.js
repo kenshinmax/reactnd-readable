@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import {
   SELECT_SUBREDDIT,
+  SELECT_POST,
   INVALIDATE_SUBREDDIT,
   REQUEST_POSTS,
   RECEIVE_POSTS, 
@@ -10,7 +11,14 @@ import {
 } from '../actions'
 
 
-
+function selectedPost(state = '0000', action) {
+  switch (action.type) {
+    case SELECT_POST:
+      return action.id
+    default:
+      return state
+  }
+}
 function selectedSubreddit(state = 'react', action) {
   switch (action.type) {
     case SELECT_SUBREDDIT:
@@ -19,6 +27,7 @@ function selectedSubreddit(state = 'react', action) {
       return state
   }
 }
+
 function comments (
   state = {
     isFetching: false,
@@ -87,21 +96,24 @@ function posts(
       return state
   }
 }
-function commentsByPost(state = {}, action) {
 
+function commentsByPost(state = {}, action) {
+  
   switch (action.type) {
 
     case INVALIDATE_SUBREDDIT:
     case RECEIVE_COMMENTS:
     case REQUEST_COMMENTS:
+      debugger
       return Object.assign({}, state, {
-        [action.subreddit]: comments(state[action.subreddit], action)
+        [action.post.id]: comments(state[action.post.id], action)
       })
     default:
       return state
   }
 }
 function postsBySubreddit(state = {}, action) {
+ // debugger
   switch (action.type) {
     case INVALIDATE_SUBREDDIT:
     case RECEIVE_POSTS:

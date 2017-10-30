@@ -6,6 +6,7 @@ export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 export const REQUEST_COMMENTS = 'REQUEST_COMMENTS'
 export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
 export const SELECT_SUBREDDIT = 'SELECT_SUBREDDIT'
+export const SELECT_POST = 'SELECT_POST'
 export const INVALIDATE_SUBREDDIT = 'INVALIDATE_SUBREDDIT'
 
 let nextPostId = Date.now().toString()
@@ -16,6 +17,13 @@ export function addPost(category) {
     id: nextPostId++,
     deleted: false,
     category
+  }
+}
+
+export function selectPost(post) {
+  return {
+    type: SELECT_POST,
+    post
   }
 }
 
@@ -34,6 +42,7 @@ export function invalidateSubreddit(subreddit) {
 }
 
 function requestComments(post) {
+ // debugger
 	return{
 		type: REQUEST_COMMENTS,
 		post
@@ -45,7 +54,7 @@ function receiveComments(post, json){
 		type: RECEIVE_COMMENTS,
 		post,
 		comments: json,
-		receivedAt:Date.now()
+		receivedAt: Date.now()
 	}
 }
 
@@ -66,7 +75,7 @@ function receivePosts(subreddit, json) {
 }
 
 
-function createPost(category) {
+function createPost(category, post) {
   return dispatch => {
     dispatch(addPost(category))
     return fetch(`http://localhost:3001/posts/comments`,
@@ -77,30 +86,32 @@ function createPost(category) {
       .then(json => dispatch(receivePosts(category, json)))
   }
 }
-function fetchComments(subreddit) {
+function fetchComments(post) {
+  //debugger
   return dispatch => {
-    dispatch(requestComments(subreddit))
-    return fetch(`http://localhost:3001/posts/8xf0y6ziyjabvozdd253nd/comments`,
+    dispatch(requestComments(post))
+    return fetch(`http://localhost:3001/posts/${post.id}/comments`,
       {
         headers: { 'Authorization': 'whatever-you-want' }
       })
       .then(response => response.json())
-      .then(json => dispatch(receiveComments(subreddit, json)))
+      .then(json => dispatch(receiveComments(post, json)))
   }
 }
 
-function fetchPosts(subreddit) {
+function fetchPosts(post) {
   return dispatch => {
-    dispatch(requestPosts(subreddit))
-    return fetch(`http://localhost:3001/${subreddit}/posts`,{
+    dispatch(requestPosts(post))
+    return fetch(`http://localhost:3001/${post}/posts`,{
           headers: { 'Authorization': '1234abc' }
       })
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(subreddit, json)))
+      .then(json => dispatch(receivePosts(post, json)))
   }
 }
 
 function shouldFetchComments(state, subreddit) {
+ //debugger;
   const comments = state.commentsByPost[subreddit]
   if (!comments) {
     return true
@@ -111,11 +122,11 @@ function shouldFetchComments(state, subreddit) {
   }
 }
 
-export function fetchCommentsIfNeeded(subreddit) {
-	debugger;
+export function fetchCommentsIfNeeded(post) {
+  debugger
   return (dispatch, getState) => {
-    if (shouldFetchComments(getState(), subreddit)) {
-      return dispatch(fetchComments(subreddit))
+    if (shouldFetchComments(getState(), post)) {
+      return dispatch(fetchComments(post))
     }
   }
 }

@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import {
   selectSubreddit,
   fetchPostsIfNeeded,
-  fetchCommentsIfNeeded,
   invalidateSubreddit
 } from '../actions'
 import Picker from '../components/Picker'
@@ -20,7 +19,6 @@ class AsyncApp extends Component {
 
   componentDidMount() {
     const { selectedSubreddit, selectPost } = this.props
-    //dispatch(selectPost(selectedSubreddit))
     selectPost(selectedSubreddit)
   }
 
@@ -32,14 +30,13 @@ class AsyncApp extends Component {
   }
 
   handleChange(nextSubreddit) {
-    const { chooseSubreddit, selectPost } = this.props
+    const { chooseSubreddit } = this.props
     chooseSubreddit(nextSubreddit)
-    selectPost(nextSubreddit)
+    //selectPost(nextSubreddit)
   }
 
   handleRefreshClick(e) {
     e.preventDefault()
-
     const {selectPost, selectedSubreddit } = this.props
     invalidateSubreddit(selectedSubreddit)
     selectPost(selectedSubreddit)
