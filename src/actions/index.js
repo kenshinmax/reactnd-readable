@@ -111,8 +111,8 @@ function fetchPosts(post) {
 }
 
 function shouldFetchComments(state, subreddit) {
- //debugger;
-  const comments = state.commentsByPost[subreddit]
+ debugger;
+  const comments = state.commentsByPost[subreddit.id]
   if (!comments) {
     return true
   } else if (comments.isFetching) {

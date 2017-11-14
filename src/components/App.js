@@ -30,12 +30,13 @@ class AsyncApp extends Component {
   }
 
   handleChange(nextSubreddit) {
-    const { chooseSubreddit } = this.props
+    const { chooseSubreddit, selectPost } = this.props
     chooseSubreddit(nextSubreddit)
-    //selectPost(nextSubreddit)
+    selectPost(nextSubreddit)
   }
 
   handleRefreshClick(e) {
+    //debugger
     e.preventDefault()
     const {selectPost, selectedSubreddit } = this.props
     invalidateSubreddit(selectedSubreddit)

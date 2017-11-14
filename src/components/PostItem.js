@@ -19,11 +19,24 @@ class PostItem extends Component {
    	  }
    	  this.handleClick = this.handleClick.bind(this)
    }
-   componentWillMount() {
-   	const { selectPost, getComments, item} = this.props
-   	getComments(item)
-   }
-   expand(){
+  componentDidMount() {
+   	const { choosePost, getComments, item} = this.props
+   	//debugger
+    choosePost(item)
+    getComments(item)
+  }
+  componentDidUpdate(prevProps) {
+    console.log("PostItem is updating!!")
+
+  }
+  /*
+  componentWillMount() {
+    const { selectPosted, choosePost, getComments, item } = this.props
+    choosePost(item)
+    getComments(item)
+  }
+  */
+  expand(){
    	  this.setState({ expanded:true })
    }
    collapse() {
@@ -34,7 +47,6 @@ class PostItem extends Component {
    }
    handleClick(post) {
    	  this.toggleExpansion()
-   	  
    }
    handleKeyPress(event) {
    	var key = event.keyCode;
@@ -51,8 +63,8 @@ class PostItem extends Component {
 			}
    }
    render() {
-   	            var classes = "accordion " + this.props.theme;
-				var expandState = this.state.expanded ? 'is-expanded' : 'is-collapsed',
+   	    var classes = "accordion " + this.props.theme;
+				var expandState = this.state.expanded ? 'is-collapsed' : 'is-expanded',
 				hiddenState = this.state.expanded ? '' : 'hidden',
 				hiddenClass = this.state.expanded ? 'visually-hidden' : 'visually-hiddenz',
 				ariaHiddenState = this.state.expanded ? 'false' : 'true',
@@ -64,12 +76,13 @@ class PostItem extends Component {
 				title = this.state.post.title,
 				body = this.state.post.body
 
-				const { comments, item } = this.props
+				const { selectedPost, comments, item } = this.props
                 
    	  return (
-            
+      
 			<div id={uniqueId} className={classes}>
-			    
+			    <h2>{selectedPost}</h2>
+          <h2>{item.id}</h2>         
 				<header value={item.id} onClick={this.handleClick} onKeyDown={this.handleKeyPress} tabIndex="0" role="tab" aria-selected={selectedState} aria-controls={uniqueId} aria-expanded={ariaExpandedState}>
 					<span>{title}</span>
 				</header>
@@ -78,7 +91,7 @@ class PostItem extends Component {
 						{ comments !== 'undefined' &&
 				          <div>
 				            <div id="comment-container">
-				               
+				               <Comments comments={comments}/>
 				            </div>
 				          </div>}
 				</section>
@@ -88,21 +101,27 @@ class PostItem extends Component {
    }
 }
 
+PostItem.propTypes = {
+  selectedPost: PropTypes.string.isRequired,
+  comments: PropTypes.array.isRequired
+}
 
 function mapStateToProps(state) {
-  const { selectPost, commentsByPost } = state
-  const { items: comments } = commentsByPost || { items: [] }
+  const { selectedPost, commentsByPost, post } = state
+  const { items: comments } = commentsByPost[selectedPost] || { isFetching: true, items: [] }
   return {
+    selectedPost,
     comments
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getComments: (data) => dispatch(fetchCommentsIfNeeded(data))
+    getComments: (data) => dispatch(fetchCommentsIfNeeded(data)),
+    choosePost: (data) => dispatch(selectPost(data))
   }
 } 
 
 
-export default connect(mapStateToProps,  mapDispatchToProps)(PostItem)
+export default connect(mapStateToProps, mapDispatchToProps)(PostItem)
 

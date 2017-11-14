@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import PostItem from './PostItem'
 
 export default class Picker extends Component {
   render() {

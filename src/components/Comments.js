@@ -6,6 +6,7 @@ export default class Comments extends Component {
 
 	constructor(props) {
 		super(props)
+		//debugger
 	}
 	
 	render() {

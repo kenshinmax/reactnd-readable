@@ -12,9 +12,12 @@ import {
 
 
 function selectedPost(state = '0000', action) {
+  //debugger
   switch (action.type) {
     case SELECT_POST:
-      return action.id
+      return action.post.id
+    case REQUEST_COMMENTS: 
+      return action.post.id
     default:
       return state
   }
@@ -98,7 +101,7 @@ function posts(
 }
 
 function commentsByPost(state = {}, action) {
-  
+  //debugger
   switch (action.type) {
 
     case INVALIDATE_SUBREDDIT:
@@ -129,7 +132,8 @@ function postsBySubreddit(state = {}, action) {
 const rootReducer = combineReducers({
   postsBySubreddit,
   commentsByPost,
-  selectedSubreddit
+  selectedSubreddit,
+  selectedPost
 })
 
 export default rootReducer
