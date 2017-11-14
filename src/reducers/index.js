@@ -15,9 +15,7 @@ function selectedPost(state = '0000', action) {
   //debugger
   switch (action.type) {
     case SELECT_POST:
-      return action.post.id
-    case REQUEST_COMMENTS: 
-      return action.post.id
+      return action.post
     default:
       return state
   }
@@ -107,7 +105,7 @@ function commentsByPost(state = {}, action) {
     case INVALIDATE_SUBREDDIT:
     case RECEIVE_COMMENTS:
     case REQUEST_COMMENTS:
-      debugger
+      //debugger
       return Object.assign({}, state, {
         [action.post.id]: comments(state[action.post.id], action)
       })

@@ -10,7 +10,8 @@ import {
 
 class PostItem extends Component {
 
-   constructor(props) {
+  constructor(props) {
+     //debugger
    	  super(props)
    	  this.state={
    	  	expanded: this.props.expanded,
@@ -18,16 +19,21 @@ class PostItem extends Component {
    	  	post: this.props.item
    	  }
    	  this.handleClick = this.handleClick.bind(this)
-   }
+  }
   componentDidMount() {
    	const { choosePost, getComments, item} = this.props
    	//debugger
     choosePost(item)
     getComments(item)
+
   }
   componentDidUpdate(prevProps) {
     console.log("PostItem is updating!!")
-
+    //debugger
+    if (this.props.selectedPost !== prevProps.selectedPost) {
+      const { choosePost, selectedPost } = this.props
+      choosePost(selectedPost)
+    }
   }
   /*
   componentWillMount() {
@@ -81,7 +87,7 @@ class PostItem extends Component {
    	  return (
       
 			<div id={uniqueId} className={classes}>
-			    <h2>{selectedPost}</h2>
+			   
           <h2>{item.id}</h2>         
 				<header value={item.id} onClick={this.handleClick} onKeyDown={this.handleKeyPress} tabIndex="0" role="tab" aria-selected={selectedState} aria-controls={uniqueId} aria-expanded={ariaExpandedState}>
 					<span>{title}</span>
@@ -108,7 +114,7 @@ PostItem.propTypes = {
 
 function mapStateToProps(state) {
   const { selectedPost, commentsByPost, post } = state
-  const { items: comments } = commentsByPost[selectedPost] || { isFetching: true, items: [] }
+  const { items: comments } = commentsByPost[selectedPost.id] || { isFetching: true, items: [] }
   return {
     selectedPost,
     comments

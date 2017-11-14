@@ -111,7 +111,7 @@ function fetchPosts(post) {
 }
 
 function shouldFetchComments(state, subreddit) {
- debugger;
+ //debugger;
   const comments = state.commentsByPost[subreddit.id]
   if (!comments) {
     return true
@@ -123,7 +123,7 @@ function shouldFetchComments(state, subreddit) {
 }
 
 export function fetchCommentsIfNeeded(post) {
-  debugger
+  //debugger
   return (dispatch, getState) => {
     if (shouldFetchComments(getState(), post)) {
       return dispatch(fetchComments(post))
